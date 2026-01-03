@@ -21,12 +21,24 @@ import { EditBranchNameDialog } from '@/components/dialogs/tasks/EditBranchNameD
 import { ShareDialog } from '@/components/dialogs/tasks/ShareDialog';
 import { ReassignDialog } from '@/components/dialogs/tasks/ReassignDialog';
 import { StopShareTaskDialog } from '@/components/dialogs/tasks/StopShareTaskDialog';
+import { PreviewPlanDialog } from '@/components/dialogs/tasks/PreviewPlanDialog';
 import { useProject } from '@/contexts/ProjectContext';
 import { openTaskForm } from '@/lib/openTaskForm';
 
 import { useNavigate } from 'react-router-dom';
 import type { SharedTaskRecord } from '@/hooks/useProjectTasks';
 import { useAuth } from '@/hooks';
+
+/**
+ * Extract plan/phase file path from task description.
+ * Tasks imported from plans have description format:
+ * "Plan: {name}\nPhase file: {path}"
+ */
+function extractPlanFilePath(description?: string | null): string | null {
+  if (!description) return null;
+  const match = description.match(/Phase file: (.+)$/m);
+  return match ? match[1].trim() : null;
+}
 
 interface ActionsDropdownProps {
   task?: TaskWithAttemptStatus | null;
@@ -49,6 +61,13 @@ export function ActionsDropdown({
   const hasTaskActions = Boolean(task);
   const isShared = Boolean(sharedTask);
   const canEditShared = (!isShared && !task?.shared_task_id) || isSignedIn;
+  const planFilePath = extractPlanFilePath(task?.description);
+
+  const handlePreviewPlan = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!projectId || !planFilePath) return;
+    PreviewPlanDialog.show({ projectId, filePath: planFilePath });
+  };
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -229,6 +248,11 @@ export function ActionsDropdown({
           {hasTaskActions && (
             <>
               <DropdownMenuLabel>{t('actionsMenu.task')}</DropdownMenuLabel>
+              {planFilePath && (
+                <DropdownMenuItem onClick={handlePreviewPlan}>
+                  {t('actionsMenu.previewPlan')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 disabled={!task || isShared}
                 onClick={handleShare}

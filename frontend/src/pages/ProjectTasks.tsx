@@ -3,12 +3,13 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { AlertTriangle, Plus, X } from 'lucide-react';
+import { AlertTriangle, Plus, X, FolderOpen } from 'lucide-react';
 import { Loader } from '@/components/ui/loader';
 import { tasksApi } from '@/lib/api';
 import type { RepoBranchStatus, Workspace } from 'shared/types';
 import { openTaskForm } from '@/lib/openTaskForm';
 import { FeatureShowcaseDialog } from '@/components/dialogs/global/FeatureShowcaseDialog';
+import { ImportPlansDialog } from '@/components/dialogs/tasks/ImportPlansDialog';
 import { showcases } from '@/config/showcases';
 import { useUserSystem } from '@/components/ConfigProvider';
 import { usePostHog } from 'posthog-js/react';
@@ -831,10 +832,23 @@ export function ProjectTasks() {
         <Card>
           <CardContent className="text-center py-8">
             <p className="text-muted-foreground">{t('empty.noTasks')}</p>
-            <Button className="mt-4" onClick={handleCreateNewTask}>
-              <Plus className="h-4 w-4 mr-2" />
-              {t('empty.createFirst')}
-            </Button>
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <Button onClick={handleCreateNewTask}>
+                <Plus className="h-4 w-4 mr-2" />
+                {t('empty.createFirst')}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (projectId) {
+                    ImportPlansDialog.show({ projectId });
+                  }
+                }}
+              >
+                <FolderOpen className="h-4 w-4 mr-2" />
+                Import from Plans
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

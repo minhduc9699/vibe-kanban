@@ -19,6 +19,7 @@ import {
   Plus,
   LogOut,
   LogIn,
+  FolderInput,
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { SearchBar } from '@/components/SearchBar';
@@ -38,6 +39,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { OAuthDialog } from '@/components/dialogs/global/OAuthDialog';
+import { ImportPlansDialog } from '@/components/dialogs/tasks/ImportPlansDialog';
 import { useUserSystem } from '@/components/ConfigProvider';
 import { oauthApi } from '@/lib/api';
 
@@ -112,6 +114,12 @@ export function Navbar() {
   const handleCreateTask = () => {
     if (projectId) {
       openTaskForm({ mode: 'create', projectId });
+    }
+  };
+
+  const handleImportPlans = () => {
+    if (projectId) {
+      ImportPlansDialog.show({ projectId });
     }
   };
 
@@ -227,6 +235,15 @@ export function Navbar() {
                     aria-label="Create new task"
                   >
                     <Plus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9"
+                    onClick={handleImportPlans}
+                    aria-label="Import from Plans"
+                  >
+                    <FolderInput className="h-4 w-4" />
                   </Button>
                 </div>
                 <NavDivider />

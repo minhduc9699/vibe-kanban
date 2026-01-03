@@ -89,6 +89,13 @@ import {
   AbortConflictsRequest,
   Session,
   Workspace,
+  PlanPhaseProgress,
+  PlanPhaseDetail,
+  PlanMetadata,
+  PlanPhaseSelection,
+  ImportPlansRequest,
+  ImportPlansResponse,
+  PlanFileContent,
 } from 'shared/types';
 import type { WorkspaceWithSession } from '@/types/attempt';
 import { createWorkspaceWithSession } from '@/types/attempt';
@@ -1288,5 +1295,42 @@ export const queueApi = {
   getStatus: async (sessionId: string): Promise<QueueStatus> => {
     const response = await makeRequest(`/api/sessions/${sessionId}/queue`);
     return handleApiResponse<QueueStatus>(response);
+  },
+};
+
+// Re-export plan types for backwards compatibility
+export type { PlanPhaseProgress, PlanPhaseDetail, PlanMetadata, PlanPhaseSelection, ImportPlansRequest, ImportPlansResponse, PlanFileContent };
+
+// Plans API
+export const plansApi = {
+  /**
+   * List available plans for a project
+   */
+  list: async (projectId: string): Promise<PlanMetadata[]> => {
+    const response = await makeRequest(
+      `/api/plans?project_id=${encodeURIComponent(projectId)}`
+    );
+    return handleApiResponse<PlanMetadata[]>(response);
+  },
+
+  /**
+   * Import plans as tasks
+   */
+  import: async (request: ImportPlansRequest): Promise<ImportPlansResponse> => {
+    const response = await makeRequest('/api/plans/import', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+    return handleApiResponse<ImportPlansResponse>(response);
+  },
+
+  /**
+   * Read a plan/phase markdown file content
+   */
+  readFile: async (projectId: string, filePath: string): Promise<PlanFileContent> => {
+    const response = await makeRequest(
+      `/api/plans/file?project_id=${encodeURIComponent(projectId)}&file_path=${encodeURIComponent(filePath)}`
+    );
+    return handleApiResponse<PlanFileContent>(response);
   },
 };

@@ -238,6 +238,36 @@ export type ImageResponse = { id: string, file_path: string, original_name: stri
 
 export type ImageMetadata = { exists: boolean, file_name: string | null, path: string | null, size_bytes: bigint | null, format: string | null, proxy_url: string | null, };
 
+export type PlanPhaseProgress = { total: number, completed: number, inProgress: number, pending: number, percentage: number, };
+
+export type PlanPhaseDetail = { phase: number, name: string, status: string, file: string, linkText: string | null, };
+
+export type PlanMetadata = { id: string, name: string, path: string, directory: string, phases: PlanPhaseProgress, phaseDetails: Array<PlanPhaseDetail>, progress: number, lastModified: string, status: string, description: string | null, priority: string | null, branch: string | null, tags: Array<string>, title: string | null, };
+
+export type PlanPhaseSelection = { 
+/**
+ * Plan ID
+ */
+plan_id: string, 
+/**
+ * Phase numbers to import. If empty, import all phases.
+ */
+phases: Array<number>, };
+
+export type ImportPlansRequest = { project_id: string, 
+/**
+ * Optional filter: only import these plan IDs (legacy - use selections for phase-level control)
+ */
+plan_ids: Array<string> | null, 
+/**
+ * Phase-level selection per plan
+ */
+selections: Array<PlanPhaseSelection>, };
+
+export type ImportPlansResponse = { imported_count: number, task_ids: Array<string>, errors: Array<string>, };
+
+export type PlanFileContent = { content: string, file_name: string, };
+
 export type CreateTaskAttemptBody = { task_id: string, executor_profile_id: ExecutorProfileId, repos: Array<WorkspaceRepoInput>, };
 
 export type WorkspaceRepoInput = { repo_id: string, target_branch: string, };

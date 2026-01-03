@@ -6,7 +6,8 @@
     "noSearchResults": "No tasks match your search."
   },
   "actions": {
-    "addTask": "Add task"
+    "addTask": "Add task",
+    "importPlans": "Import from Plans"
   },
   "filters": {
     "sharedToggleAria": "Toggle shared tasks",
@@ -323,6 +324,7 @@
     "gitActions": "Git actions",
     "editBranchName": "Edit branch name",
     "task": "Task",
+    "previewPlan": "Preview Plan",
     "share": "Share",
     "reassign": "Reassign",
     "stopShare": "Stop share",
