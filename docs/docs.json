@@ -52,7 +52,8 @@
           "core-features/monitoring-task-execution",
           "core-features/testing-your-application",
           "core-features/reviewing-code-changes",
-          "core-features/completing-a-task"
+          "core-features/completing-a-task",
+          "core-features/importing-plans"
         ]
       },
       {
