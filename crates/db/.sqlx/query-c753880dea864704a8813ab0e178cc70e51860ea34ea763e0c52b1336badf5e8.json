@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT\n                id AS \"id!: Uuid\",\n                session_id AS \"session_id!: Uuid\",\n                notification_type AS \"notification_type!: NotificationType\",\n                title,\n                message,\n                payload AS \"payload: Value\",\n                read_at AS \"read_at: DateTime<Utc>\",\n                created_at AS \"created_at!: DateTime<Utc>\"\n            FROM notifications\n            WHERE session_id = $1\n            ORDER BY created_at DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "session_id!: Uuid",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "notification_type!: NotificationType",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "title",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "message",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "payload: Value",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "read_at: DateTime<Utc>",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!: DateTime<Utc>",
+        "ordinal": 7,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "c753880dea864704a8813ab0e178cc70e51860ea34ea763e0c52b1336badf5e8"
+}

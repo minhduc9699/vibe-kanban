@@ -1,0 +1,68 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO scheduled_tasks (id, task_id, session_id, execute_at)\n            VALUES ($1, $2, $3, $4)\n            RETURNING\n                id AS \"id!: Uuid\",\n                task_id AS \"task_id!: Uuid\",\n                session_id AS \"session_id: Uuid\",\n                execute_at AS \"execute_at!: DateTime<Utc>\",\n                status AS \"status!: ScheduledTaskStatus\",\n                locked_until AS \"locked_until: DateTime<Utc>\",\n                error_message,\n                created_at AS \"created_at!: DateTime<Utc>\",\n                updated_at AS \"updated_at!: DateTime<Utc>\"",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "task_id!: Uuid",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "session_id: Uuid",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "execute_at!: DateTime<Utc>",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "status!: ScheduledTaskStatus",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "locked_until: DateTime<Utc>",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "error_message",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!: DateTime<Utc>",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "updated_at!: DateTime<Utc>",
+        "ordinal": 8,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "7832627346ce970b94ceaf42070942d8b123b9c67497f06518aaff3f2121d124"
+}

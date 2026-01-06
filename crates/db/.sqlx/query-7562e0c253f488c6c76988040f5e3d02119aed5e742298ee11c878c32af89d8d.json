@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO notifications (id, session_id, notification_type, title, message, payload)\n            VALUES ($1, $2, $3, $4, $5, $6)\n            RETURNING\n                id AS \"id!: Uuid\",\n                session_id AS \"session_id!: Uuid\",\n                notification_type AS \"notification_type!: NotificationType\",\n                title,\n                message,\n                payload AS \"payload: Value\",\n                read_at AS \"read_at: DateTime<Utc>\",\n                created_at AS \"created_at!: DateTime<Utc>\"",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "session_id!: Uuid",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "notification_type!: NotificationType",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "title",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "message",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "payload: Value",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "read_at: DateTime<Utc>",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at!: DateTime<Utc>",
+        "ordinal": 7,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "7562e0c253f488c6c76988040f5e3d02119aed5e742298ee11c878c32af89d8d"
+}

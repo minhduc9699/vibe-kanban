@@ -74,6 +74,18 @@ export type Workspace = { id: string, task_id: string, container_ref: string | n
 
 export type Session = { id: string, workspace_id: string, executor: string | null, created_at: string, updated_at: string, };
 
+export type ScheduledTask = { id: string, task_id: string, session_id: string | null, execute_at: string, status: ScheduledTaskStatus, locked_until: string | null, error_message: string | null, created_at: string, updated_at: string, };
+
+export type ScheduledTaskStatus = "pending" | "running" | "completed" | "failed" | "cancelled";
+
+export type CreateScheduledTask = { task_id: string, session_id: string | null, execute_at: string, };
+
+export type Notification = { id: string, session_id: string, notification_type: NotificationType, title: string, message: string, payload: unknown | null, read_at: string | null, created_at: string, };
+
+export type NotificationType = "task_complete" | "approval_needed" | "question" | "error";
+
+export type CreateNotification = { session_id: string, notification_type: NotificationType, title: string, message: string, payload: unknown | null, };
+
 export type ExecutionProcess = { id: string, session_id: string, run_reason: ExecutionProcessRunReason, executor_action: ExecutorAction, status: ExecutionProcessStatus, exit_code: bigint | null, 
 /**
  * dropped: true if this process is excluded from the current
@@ -469,7 +481,11 @@ export type Ccs = {
 /**
  * Provider to use (gemini, codev, agy, qwen, iflow, kiro, ghcp)
  */
-provider: string, append_prompt: AppendPrompt, model?: string | null, dangerously_skip_permissions?: boolean | null, base_command_override?: string | null, additional_params?: Array<string> | null, env?: { [key in string]?: string } | null, };
+provider: string, append_prompt: AppendPrompt, model?: string | null, dangerously_skip_permissions?: boolean | null, 
+/**
+ * Enable interactive approvals via protocol (like Claude)
+ */
+approvals?: boolean | null, base_command_override?: string | null, additional_params?: Array<string> | null, env?: { [key in string]?: string } | null, };
 
 export type AppendPrompt = string | null;
 

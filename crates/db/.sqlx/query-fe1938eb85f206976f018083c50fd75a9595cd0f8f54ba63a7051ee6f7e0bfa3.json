@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE scheduled_tasks\n            SET status = $2, error_message = $3, updated_at = datetime('now')\n            WHERE id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "fe1938eb85f206976f018083c50fd75a9595cd0f8f54ba63a7051ee6f7e0bfa3"
+}

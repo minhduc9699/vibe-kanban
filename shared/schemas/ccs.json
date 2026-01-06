@@ -32,6 +32,13 @@
         "null"
       ]
     },
+    "approvals": {
+      "description": "Enable interactive approvals via protocol (like Claude)",
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
     "base_command_override": {
       "title": "Base Command Override",
       "description": "Override the base command with a custom command",
