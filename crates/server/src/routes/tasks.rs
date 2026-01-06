@@ -237,12 +237,14 @@ pub async fn create_task_and_start(
         .await?
         .ok_or(ApiError::Database(SqlxError::RowNotFound))?;
 
+    let suggested_prompt = task.suggested_prompt();
     tracing::info!("Started attempt for task {}", task.id);
     Ok(ResponseJson(ApiResponse::success(TaskWithAttemptStatus {
         task,
         has_in_progress_attempt: is_attempt_running,
         last_attempt_failed: false,
         executor: payload.executor_profile_id.executor.to_string(),
+        suggested_prompt,
     })))
 }
 

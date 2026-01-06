@@ -46,7 +46,11 @@ export type TaskStatus = "todo" | "inprogress" | "inreview" | "done" | "cancelle
 
 export type Task = { id: string, project_id: string, title: string, description: string | null, status: TaskStatus, parent_workspace_id: string | null, shared_task_id: string | null, created_at: string, updated_at: string, };
 
-export type TaskWithAttemptStatus = { has_in_progress_attempt: boolean, last_attempt_failed: boolean, executor: string, id: string, project_id: string, title: string, description: string | null, status: TaskStatus, parent_workspace_id: string | null, shared_task_id: string | null, created_at: string, updated_at: string, };
+export type TaskWithAttemptStatus = { has_in_progress_attempt: boolean, last_attempt_failed: boolean, executor: string, 
+/**
+ * Suggested init prompt for task execution
+ */
+suggested_prompt: string, id: string, project_id: string, title: string, description: string | null, status: TaskStatus, parent_workspace_id: string | null, shared_task_id: string | null, created_at: string, updated_at: string, };
 
 export type TaskRelationships = { parent_task: Task | null, current_workspace: Workspace, children: Array<Task>, };
 
@@ -469,7 +473,11 @@ export type Ccs = {
 /**
  * Provider to use (gemini, codev, agy, qwen, iflow, kiro, ghcp)
  */
-provider: string, append_prompt: AppendPrompt, model?: string | null, dangerously_skip_permissions?: boolean | null, base_command_override?: string | null, additional_params?: Array<string> | null, env?: { [key in string]?: string } | null, };
+provider: string, append_prompt: AppendPrompt, model?: string | null, dangerously_skip_permissions?: boolean | null, 
+/**
+ * Enable interactive approvals via protocol (like Claude)
+ */
+approvals?: boolean | null, base_command_override?: string | null, additional_params?: Array<string> | null, env?: { [key in string]?: string } | null, };
 
 export type AppendPrompt = string | null;
 

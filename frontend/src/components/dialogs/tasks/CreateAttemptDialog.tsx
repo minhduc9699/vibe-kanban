@@ -25,6 +25,7 @@ import { useTaskAttemptsWithSessions } from '@/hooks/useTaskAttempts';
 import { useProject } from '@/contexts/ProjectContext';
 import { useUserSystem } from '@/components/ConfigProvider';
 import { paths } from '@/lib/paths';
+import { getSuggestedPrompt } from '@/lib/task-prompt-utils';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
 import { defineModal } from '@/lib/modals';
 import type { ExecutorProfileId, BaseCodingAgent } from 'shared/types';
@@ -101,6 +102,13 @@ const CreateAttemptDialogImpl = NiceModal.create<CreateAttemptDialogProps>(
         resetBranchSelection();
       }
     }, [modal.visible, resetBranchSelection]);
+
+    // Pre-fill customPrompt with suggested prompt when task loads
+    useEffect(() => {
+      if (task && modal.visible && customPrompt === '') {
+        setCustomPrompt(getSuggestedPrompt(task));
+      }
+    }, [task, modal.visible, customPrompt]);
 
     const defaultProfile: ExecutorProfileId | null = useMemo(() => {
       if (latestAttempt?.session?.executor) {

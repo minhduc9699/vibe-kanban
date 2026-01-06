@@ -43,6 +43,8 @@ pub struct TaskWithAttemptStatus {
     pub has_in_progress_attempt: bool,
     pub last_attempt_failed: bool,
     pub executor: String,
+    /// Suggested init prompt for task execution
+    pub suggested_prompt: String,
 }
 
 impl std::ops::Deref for TaskWithAttemptStatus {
@@ -130,6 +132,26 @@ impl Task {
         }
     }
 
+    /// Extract plan file path from description if present.
+    /// Matches "Phase file: {path}" pattern from plan imports.
+    pub fn plan_file_path(&self) -> Option<String> {
+        self.description.as_ref().and_then(|desc| {
+            desc.lines()
+                .find(|line| line.starts_with("Phase file:"))
+                .map(|line| line.trim_start_matches("Phase file:").trim().to_string())
+        })
+    }
+
+    /// Generate suggested init prompt for task execution.
+    /// Uses plan path if available, otherwise falls back to to_prompt().
+    pub fn suggested_prompt(&self) -> String {
+        if let Some(plan_path) = self.plan_file_path() {
+            format!("Implement the plan in {}", plan_path)
+        } else {
+            self.to_prompt()
+        }
+    }
+
     pub async fn parent_project(&self, pool: &SqlitePool) -> Result<Option<Project>, sqlx::Error> {
         Project::find_by_id(pool, self.project_id).await
     }
@@ -191,8 +213,8 @@ ORDER BY t.created_at DESC"#,
 
         let tasks = records
             .into_iter()
-            .map(|rec| TaskWithAttemptStatus {
-                task: Task {
+            .map(|rec| {
+                let task = Task {
                     id: rec.id,
                     project_id: rec.project_id,
                     title: rec.title,
@@ -202,10 +224,15 @@ ORDER BY t.created_at DESC"#,
                     shared_task_id: rec.shared_task_id,
                     created_at: rec.created_at,
                     updated_at: rec.updated_at,
-                },
-                has_in_progress_attempt: rec.has_in_progress_attempt != 0,
-                last_attempt_failed: rec.last_attempt_failed != 0,
-                executor: rec.executor,
+                };
+                let suggested_prompt = task.suggested_prompt();
+                TaskWithAttemptStatus {
+                    task,
+                    has_in_progress_attempt: rec.has_in_progress_attempt != 0,
+                    last_attempt_failed: rec.last_attempt_failed != 0,
+                    executor: rec.executor,
+                    suggested_prompt,
+                }
             })
             .collect();
 
@@ -488,5 +515,66 @@ ORDER BY t.created_at DESC"#,
             current_workspace: workspace.clone(),
             children,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn make_task(title: &str, description: Option<&str>) -> Task {
+        Task {
+            id: Uuid::new_v4(),
+            project_id: Uuid::new_v4(),
+            title: title.to_string(),
+            description: description.map(|s| s.to_string()),
+            status: TaskStatus::Todo,
+            parent_workspace_id: None,
+            shared_task_id: None,
+            created_at: Utc::now(),
+            updated_at: Utc::now(),
+        }
+    }
+
+    #[test]
+    fn test_plan_file_path_extracts_path() {
+        let task = make_task(
+            "Test Task",
+            Some("Plan: my-plan\nPhase file: ./phase-01-setup.md"),
+        );
+        assert_eq!(
+            task.plan_file_path(),
+            Some("./phase-01-setup.md".to_string())
+        );
+    }
+
+    #[test]
+    fn test_plan_file_path_returns_none_when_missing() {
+        let task = make_task("Test Task", Some("Just a description"));
+        assert_eq!(task.plan_file_path(), None);
+
+        let task_no_desc = make_task("Test Task", None);
+        assert_eq!(task_no_desc.plan_file_path(), None);
+    }
+
+    #[test]
+    fn test_suggested_prompt_with_plan() {
+        let task = make_task(
+            "Test Task",
+            Some("Plan: my-plan\nPhase file: plans/260101-auth/phase-01.md"),
+        );
+        assert_eq!(
+            task.suggested_prompt(),
+            "Implement the plan in plans/260101-auth/phase-01.md"
+        );
+    }
+
+    #[test]
+    fn test_suggested_prompt_without_plan() {
+        let task = make_task("Test Task", Some("Regular description"));
+        assert_eq!(task.suggested_prompt(), "Test Task\n\nRegular description");
+
+        let task_no_desc = make_task("Test Task", None);
+        assert_eq!(task_no_desc.suggested_prompt(), "Test Task");
     }
 }
