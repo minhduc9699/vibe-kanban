@@ -50,6 +50,10 @@ To import plans into your project:
 The import process spawns a secure Node.js process to scan your plans. This process has a 30-second timeout to ensure performance.
 </Note>
 
+## Executing Imported Tasks
+
+When you start a task derived from an imported plan, Vibe Kanban automatically detects the source plan file. The **Custom prompt** field will be pre-filled with a directive to implement the specific plan file (e.g., `Implement the plan in plans/my-feature.md`), ensuring the agent works directly from your detailed plan requirements.
+
 ## API Usage
 
 You can also trigger the import programmatically via the API:
