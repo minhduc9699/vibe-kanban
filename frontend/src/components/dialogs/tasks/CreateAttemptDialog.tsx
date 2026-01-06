@@ -9,6 +9,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import RepoBranchSelector from '@/components/tasks/RepoBranchSelector';
 import { ExecutorProfileSelector } from '@/components/settings';
 import { useAttemptCreation } from '@/hooks/useAttemptCreation';
@@ -50,6 +52,7 @@ const CreateAttemptDialogImpl = NiceModal.create<CreateAttemptDialogProps>(
 
     const [userSelectedProfile, setUserSelectedProfile] =
       useState<ExecutorProfileId | null>(null);
+    const [customPrompt, setCustomPrompt] = useState<string>('');
 
     const { data: attempts = [], isLoading: isLoadingAttempts } =
       useTaskAttemptsWithSessions(taskId, {
@@ -94,6 +97,7 @@ const CreateAttemptDialogImpl = NiceModal.create<CreateAttemptDialogProps>(
     useEffect(() => {
       if (!modal.visible) {
         setUserSelectedProfile(null);
+        setCustomPrompt('');
         resetBranchSelection();
       }
     }, [modal.visible, resetBranchSelection]);
@@ -152,6 +156,7 @@ const CreateAttemptDialogImpl = NiceModal.create<CreateAttemptDialogProps>(
         await createAttempt({
           profile: effectiveProfile,
           repos,
+          customPrompt: customPrompt.trim() || undefined,
         });
 
         modal.hide();
@@ -198,6 +203,28 @@ const CreateAttemptDialogImpl = NiceModal.create<CreateAttemptDialogProps>(
               isLoading={isLoadingBranches}
               className="space-y-2"
             />
+
+            <div className="space-y-2">
+              <Label htmlFor="custom-prompt" className="text-sm font-medium">
+                {t('createAttemptDialog.customPrompt', 'Custom prompt')}
+              </Label>
+              <Textarea
+                id="custom-prompt"
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                placeholder={t(
+                  'createAttemptDialog.customPromptPlaceholder',
+                  'Leave empty to use task title and description'
+                )}
+                className="min-h-[100px] resize-y"
+              />
+              <p className="text-xs text-muted-foreground">
+                {t(
+                  'createAttemptDialog.customPromptHelp',
+                  'Override the default prompt sent to the agent. If empty, task title and description will be used.'
+                )}
+              </p>
+            </div>
 
             {error && (
               <div className="text-sm text-destructive">

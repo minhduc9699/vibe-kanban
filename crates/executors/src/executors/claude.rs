@@ -414,20 +414,8 @@ impl ClaudeLogProcessor {
                             }
                         }
                         Err(_) => {
-                            // Handle non-JSON output as raw system message
-                            if !trimmed.is_empty() {
-                                let entry = NormalizedEntry {
-                                    timestamp: None,
-                                    entry_type: NormalizedEntryType::SystemMessage,
-                                    content: trimmed.to_string(),
-                                    metadata: None,
-                                };
-
-                                let patch_id = entry_index_provider.next();
-                                let patch =
-                                    ConversationPatch::add_normalized_entry(patch_id, entry);
-                                msg_store.push_patch(patch);
-                            }
+                            // Skip non-JSON output (e.g., [cliproxy] info lines, service messages)
+                            // Only JSON messages from Claude CLI contain meaningful data
                         }
                     }
                 }

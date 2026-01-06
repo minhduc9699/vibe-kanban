@@ -217,7 +217,7 @@ pub async fn create_task_and_start(
 
     let is_attempt_running = deployment
         .container()
-        .start_workspace(&workspace, payload.executor_profile_id.clone())
+        .start_workspace(&workspace, payload.executor_profile_id.clone(), None)
         .await
         .inspect_err(|err| tracing::error!("Failed to start task attempt: {}", err))
         .is_ok();

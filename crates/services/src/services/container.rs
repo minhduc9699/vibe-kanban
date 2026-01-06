@@ -882,6 +882,7 @@ pub trait ContainerService {
         &self,
         workspace: &Workspace,
         executor_profile_id: ExecutorProfileId,
+        custom_prompt: Option<String>,
     ) -> Result<ExecutionProcess, ContainerError> {
         // Create container
         self.create(workspace).await?;
@@ -916,7 +917,8 @@ pub trait ContainerService {
         )
         .await?;
 
-        let prompt = task.to_prompt();
+        // Use custom prompt if provided, otherwise derive from task
+        let prompt = custom_prompt.unwrap_or_else(|| task.to_prompt());
 
         let repos_with_setup: Vec<_> = project_repos
             .iter()

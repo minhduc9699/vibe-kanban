@@ -228,6 +228,56 @@
           "model": "glm-4.6"
         }
       }
+    },
+    "CCS": {
+      "DEFAULT": {
+        "CCS": {
+          "provider": "gemini",
+          "dangerously_skip_permissions": true
+        }
+      },
+      "GEMINI": {
+        "CCS": {
+          "provider": "gemini",
+          "dangerously_skip_permissions": true
+        }
+      },
+      "CODEV": {
+        "CCS": {
+          "provider": "codev",
+          "dangerously_skip_permissions": true
+        }
+      },
+      "AGY": {
+        "CCS": {
+          "provider": "agy",
+          "dangerously_skip_permissions": true
+        }
+      },
+      "QWEN": {
+        "CCS": {
+          "provider": "qwen",
+          "dangerously_skip_permissions": true
+        }
+      },
+      "IFLOW": {
+        "CCS": {
+          "provider": "iflow",
+          "dangerously_skip_permissions": true
+        }
+      },
+      "KIRO": {
+        "CCS": {
+          "provider": "kiro",
+          "dangerously_skip_permissions": true
+        }
+      },
+      "GHCP": {
+        "CCS": {
+          "provider": "ghcp",
+          "dangerously_skip_permissions": true
+        }
+      }
     }
   }
 }

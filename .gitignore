@@ -85,3 +85,8 @@ dev_assets
 vibe-kanban-cloud/
 
 .jj
+.claude
+.claude/*
+plans
+plans/*
+logs/*
